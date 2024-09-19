@@ -212,9 +212,10 @@ export class FrameManager extends EventEmitter<FrameManagerEvents> {
           this.#frameTreeHandled?.resolve();
         }),
         client.send('Page.setLifecycleEventsEnabled', {enabled: true}),
-        client.send('Runtime.enable').then(() => {
-          return this.#createIsolatedWorld(client, UTILITY_WORLD_NAME);
-        }),
+        this.#createIsolatedWorld(client, UTILITY_WORLD_NAME),
+        // client.send('Runtime.enable').then(() => {
+        //   return this.#createIsolatedWorld(client, UTILITY_WORLD_NAME);
+        // }),
         ...(frame
           ? Array.from(this.#scriptsToEvaluateOnNewDocument.values())
           : []

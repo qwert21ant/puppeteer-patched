@@ -79,7 +79,7 @@ export class CdpWebWorker extends WebWorker {
     });
 
     // This might fail if the target is closed before we receive all execution contexts.
-    this.#client.send('Runtime.enable').catch(debugError);
+    // this.#client.send('Runtime.enable').catch(debugError);
   }
 
   mainRealm(): Realm {

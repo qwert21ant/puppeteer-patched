@@ -15,6 +15,7 @@ import {EventEmitter} from '../common/EventEmitter.js';
 import type {TimeoutSettings} from '../common/TimeoutSettings.js';
 import type {EvaluateFunc, HandleFor} from '../common/types.js';
 import {
+  debugError,
   fromEmitterEvent,
   timeout,
   withSourcePuppeteerURLIfNone,
@@ -136,7 +137,7 @@ export class IsolatedWorld extends Realm {
    * Waits for the next context to be set on the isolated world.
    */
   async #waitForExecutionContext(): Promise<ExecutionContext> {
-    const result = await firstValueFrom(
+    const promise = firstValueFrom(
       fromEmitterEvent(this.#emitter, 'context').pipe(
         raceWith(
           fromEmitterEvent(this.#emitter, 'disposed').pipe(
@@ -149,7 +150,13 @@ export class IsolatedWorld extends Realm {
         )
       )
     );
-    return result;
+
+    this.client.once('Runtime.executionContextCreated', () => {
+      this.client.send('Runtime.disable').catch(debugError);
+    });
+
+    await this.client.send("Runtime.enable").catch(debugError);
+    return await promise;
   }
 
   async evaluateHandle<
