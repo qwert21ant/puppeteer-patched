@@ -174,9 +174,9 @@ export class IsolatedWorld extends Realm {
     // least when the context is there) so we cannot unconditionally
     // await.
     let context = this.#executionContext();
-    if (!context) {
+    // if (!context) {
       context = await this.#waitForExecutionContext();
-    }
+    // }
     return await context.evaluateHandle(pageFunction, ...args);
   }
 
@@ -195,9 +195,9 @@ export class IsolatedWorld extends Realm {
     // least when the context is there) so we cannot unconditionally
     // await.
     let context = this.#executionContext();
-    if (!context) {
+    // if (!context) {
       context = await this.#waitForExecutionContext();
-    }
+    // }
     return await context.evaluate(pageFunction, ...args);
   }
 
@@ -208,9 +208,9 @@ export class IsolatedWorld extends Realm {
     // least when the context is there) so we cannot unconditionally
     // await.
     let context = this.#executionContext();
-    if (!context) {
+    // if (!context) {
       context = await this.#waitForExecutionContext();
-    }
+    // }
     const {object} = await this.client.send('DOM.resolveNode', {
       backendNodeId: backendNodeId,
       executionContextId: context.id,
